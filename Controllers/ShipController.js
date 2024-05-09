@@ -1,4 +1,4 @@
-const Shipment = require("../models/Shipment");
+const Shipment = require("../Models/Shipment");
 
 // Variable to keep track of the counter for shipmentId
 let shipmentCounter = 1;
