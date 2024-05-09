@@ -62,18 +62,6 @@ const shipmentSchema = new mongoose.Schema({
   estdeliverydate: {
     type: Date,
     required: true
-  },
-  empid: {
-    type: String,
-    required: true
-  },
-  shipmentId:{
-    type: String,
-    required: true
-  },
-  status :{
-    type: String,
-    required: true
   }
         
 });
