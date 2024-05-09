@@ -64,6 +64,9 @@ module.exports.Login = async (req, res, next) => {
   try {
     const { email, password } = req.body;
 
+    if(!email){
+      return res.json({message: "User not present"});
+    }
     if (!email || !password) {
       return res.json({ message: "All fields are required" });
     }
