@@ -66,7 +66,16 @@ const shipmentSchema = new mongoose.Schema({
   empid: {
     type: String,
     required: true
+  },
+  shipmentId:{
+    type: String,
+    required: true
+  },
+  status :{
+    type: String,
+    required: true
   }
+        
 });
 
 module.exports = mongoose.model("Shipment", shipmentSchema);
