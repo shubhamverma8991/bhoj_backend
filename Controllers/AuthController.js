@@ -59,6 +59,25 @@ module.exports.Signup = async (req, res, next) => {
   }
 };
 
+module.exports.getAllUsers = async (req, res, next) => {
+  try {
+    // Query all users from the database
+    const users = await User.find();
+
+    // Send the users as JSON response
+    res.status(200).json({
+      success: true,
+      users: users
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({
+      success: false,
+      message: "Internal server error"
+    });
+  }
+};
+
 
 module.exports.Login = async (req, res, next) => {
   try {
