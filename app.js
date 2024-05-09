@@ -1,19 +1,17 @@
-require("dotenv").config();
-
 const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
-const serverless = require("serverless-http"); 
+const serverless = require("serverless-http");
 const app = express();
-
+require("dotenv").config();
 const cookieParser = require("cookie-parser");
 const authRoute = require("./Routes/AuthRoute");
-const { MONGO_URL } = process.env; 
-const { PORT } = process.env || 3000;
+const { MONGO_URL } = process.env;
 
-app.get("/",(req,res)=>{
-  res.send("Hello World");
-})
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => {
+  console.log("Server running on port ${PORT}");
+});
 mongoose
   .connect(MONGO_URL, {
     useNewUrlParser: true,
@@ -22,10 +20,6 @@ mongoose
   .then(() => console.log("MongoDB is connected successfully"))
   .catch((err) => console.error(err));
 
-  app.listen(PORT, () => {
-    console.log(`Server is listening on port ${PORT}`);
-  });
-  
 app.use(
   cors({
     origin: ["http://localhost:3000"],
@@ -36,5 +30,9 @@ app.use(
 app.use(cookieParser());
 app.use(express.json());
 app.use("/", authRoute);
+
+app.get("/test", (req, res) => {
+  res.status(200).send("GET request to the homepage successful");
+});
 
 module.exports.handler = serverless(app);

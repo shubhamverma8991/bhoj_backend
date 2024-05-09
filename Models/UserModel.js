@@ -40,6 +40,7 @@ const userSchema = new mongoose.Schema({
     type: Date,
     default: Date.now,
   },
+  employeeId: String, 
 });
 
 userSchema.pre("save", async function () {

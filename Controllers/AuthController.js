@@ -1,4 +1,3 @@
-// AuthController.js
 const User = require("../Models/UserModel");
 const { createSecretToken } = require("../util/SecretToken");
 const bcrypt = require("bcryptjs");
@@ -23,6 +22,11 @@ module.exports.Signup = async (req, res, next) => {
       return res.json({ message: "User already exists" });
     }
 
+    // Generate employeeId based on branch
+    const branchInitials = branch.substring(0, 3).toUpperCase();
+    const count = await User.countDocuments({ branch });
+    const employeeId = `${branchInitials}-${count + 1}`;
+
     const newUser = await User.create({
       email,
       password,
@@ -33,6 +37,7 @@ module.exports.Signup = async (req, res, next) => {
       gender,
       branch,
       dateOfBirth,
+      employeeId: employeeId, // Assign the generated employeeId here
     });
 
     const token = createSecretToken(newUser._id);
@@ -54,6 +59,7 @@ module.exports.Signup = async (req, res, next) => {
   }
 };
 
+
 module.exports.Login = async (req, res, next) => {
   try {
     const { email, password } = req.body;
@@ -65,13 +71,13 @@ module.exports.Login = async (req, res, next) => {
     const user = await User.findOne({ email });
 
     if (!user) {
-      return res.json({ message: "Incorrect email or password" });
+      return res.json({ message: "Incorrect email" });
     }
 
     const auth = await bcrypt.compare(password, user.password);
 
     if (!auth) {
-      return res.json({ message: "Incorrect email or password" });
+      return res.json({ message: "Incorrect password" });
     }
 
     const token = createSecretToken(user._id);
@@ -84,6 +90,12 @@ module.exports.Login = async (req, res, next) => {
     res.status(200).json({
       message: "User logged in successfully",
       success: true,
+      firstName: user.firstName,
+      lastName: user.lastName,
+      branch: user.branch,
+      token: token,
+      employeeId: user.employeeId,
+
     });
 
     next();
