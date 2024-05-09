@@ -16,9 +16,12 @@ exports.createShipment = async (req, res) => {
     const shipmentId = `${fromStateInitials}-${toStateInitials}-${parceltype.substring(0, 3).toUpperCase()}-${shipmentCounter}`;
 
     // Update status
-    req.body.status = "Booked";
+    const status = "Booked";
 
-    const newShipment = new Shipment({ ...req.body, shipmentId });
+    // Create a new shipment object with status and shipmentId included
+    const newShipment = new Shipment({ ...req.body, status, shipmentId });
+
+    // Save the new shipment to the database
     const savedShipment = await newShipment.save();
     
     // Increment the counter for next shipmentId
