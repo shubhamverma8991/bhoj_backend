@@ -2,6 +2,7 @@ const User = require("../Models/UserModel");
 require("dotenv").config();
 const jwt = require("jsonwebtoken");
 
+//POST method to verify user (./verify)
 module.exports.userVerification = (req, res) => {
   const token = req.cookies.token;
   if (!token) {

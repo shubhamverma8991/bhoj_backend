@@ -2,6 +2,7 @@ const User = require("../Models/UserModel");
 const { createSecretToken } = require("../util/SecretToken");
 const bcrypt = require("bcryptjs");
 
+// POST method to Register a new user(./signup)
 module.exports.Signup = async (req, res, next) => {
   try {
     const {
@@ -37,7 +38,7 @@ module.exports.Signup = async (req, res, next) => {
       gender,
       branch,
       dateOfBirth,
-      employeeId: employeeId, // Assign the generated employeeId here
+      employeeId: employeeId,
     });
 
     const token = createSecretToken(newUser._id);
@@ -59,26 +60,7 @@ module.exports.Signup = async (req, res, next) => {
   }
 };
 
-module.exports.getAllUsers = async (req, res, next) => {
-  try {
-    // Query all users from the database
-    const users = await User.find();
-
-    // Send the users as JSON response
-    res.status(200).json({
-      success: true,
-      users: users
-    });
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({
-      success: false,
-      message: "Internal server error"
-    });
-  }
-};
-
-
+// POST method to Login a user(./login)
 module.exports.Login = async (req, res, next) => {
   try {
     const { email, password } = req.body;
@@ -120,5 +102,25 @@ module.exports.Login = async (req, res, next) => {
     next();
   } catch (error) {
     console.error(error);
+  }
+};
+
+// GET method to get all users(./users)
+module.exports.getAllUsers = async (req, res, next) => {
+  try {
+    // Query all users from the database
+    const users = await User.find();
+
+    // Send the users as JSON response
+    res.status(200).json({
+      success: true,
+      users: users
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({
+      success: false,
+      message: "Internal server error"
+    });
   }
 };

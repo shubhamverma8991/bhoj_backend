@@ -3,7 +3,7 @@ const Shipment = require("../Models/Shipment");
 // Variable to keep track of the counter for shipmentId
 let shipmentCounter = 1;
 
-// Create shipment controller
+// POST method to Create new shipment (./createShip)
 exports.createShipment = async (req, res) => {
   try {
     const { shipper, receiver, parceltype } = req.body;
@@ -31,5 +31,24 @@ exports.createShipment = async (req, res) => {
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: 'Error creating shipment' });
+  }
+};
+
+// GET method to get all shipments (./getShipments)
+exports.getAllShipments = async (req, res) => {
+  try {
+    // Fetch all shipments from the database
+    const shipments = await Shipment.find();
+
+    // If there are no shipments found, return 404 status code
+    if (!shipments || shipments.length === 0) {
+      return res.status(404).json({ message: "No shipments found" });
+    }
+
+    // If shipments are found, return them as JSON response
+    res.status(200).json(shipments);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Error fetching shipments' });
   }
 };
