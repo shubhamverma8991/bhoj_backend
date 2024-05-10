@@ -1,4 +1,4 @@
-const {createShipment, getAllShipment} = require("../Controllers/ShipController");
+const {createShipment, getAllShipments} = require("../Controllers/ShipController");
 
 const router = require("express").Router();
 
