@@ -69,22 +69,24 @@ exports.getAllShipments = async (req, res) => {
   }
 };
 
-//Get method to get shipment by ID
+// Get method to get shipment by ID
 exports.getShipById = async (req, res) => {
-  try{
-    //Fetch Shipment by Id from Database
-    const shipment = await shipment.find();
+  try {
+    // Extract shipmentId from request parameters
+    const { shipmentId } = req.params;
 
-    // If there are no shipments found, return 404 status code
-    if (!shipments || shipments.length === 0) {
-      return res.status(404).json({ message: "No shipments found" });
+    // Fetch Shipment by shipmentId from Database
+    const shipment = await Shipment.findOne({ shipmentId });
+
+    // If there is no shipment found, return 404 status code
+    if (!shipment) {
+      return res.status(404).json({ message: "Shipment not found" });
     }
 
-    // If shipments are found, return them as JSON response
-    res.status(200).json(shipments);
-
+    // If shipment is found, return it as JSON response
+    res.status(200).json(shipment);
   } catch (error) {
     console.error(error);
-    res.status(500).json({ message: 'Error fetching shipments' });
+    res.status(500).json({ message: 'Error fetching shipment' });
   }
 };
