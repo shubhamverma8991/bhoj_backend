@@ -6,7 +6,7 @@ let shipmentCounter = 1;
 // POST method to Create new shipment (./createShip)
 exports.createShipment = async (req, res) => {
   try {
-    const { shipper, receiver, parceltype } = req.body;
+    const { shipper, receiver, parceltype, employeeId } = req.body;
 
     // Extract first 3 letters of the states from the shipper and receiver addresses
     const fromStateInitials = shipper.shipperAddress.state.substring(0, 3).toUpperCase();
@@ -18,8 +18,17 @@ exports.createShipment = async (req, res) => {
     // Update status
     const status = "Booked";
 
-    // Create a new shipment object with status and shipmentId included
-    const newShipment = new Shipment({ ...req.body, status, shipmentId });
+    // Booking generating time
+    const bookedAt = new Date();
+
+    // EmployeeID of the person creating the booking
+    
+
+    // Tracking ID to track the package (using a unique identifier, e.g., UUID)
+    const trackingId = generateTrackingId();
+
+    // Create a new shipment object with status, shipmentId, employeeId, and trackingId included
+    const newShipment = new Shipment({ ...req.body, status, bookedAt, shipmentId, employeeId, trackingId });
 
     // Save the new shipment to the database
     const savedShipment = await newShipment.save();
@@ -34,6 +43,13 @@ exports.createShipment = async (req, res) => {
   }
 };
 
+// Function to generate a unique tracking ID (e.g., using UUID)
+function generateTrackingId() {
+  
+  const uuid = require('uuid');
+  return uuid.v4();
+}
+
 // GET method to get all shipments (./getShipments)
 exports.getAllShipments = async (req, res) => {
   try {
@@ -47,6 +63,26 @@ exports.getAllShipments = async (req, res) => {
 
     // If shipments are found, return them as JSON response
     res.status(200).json(shipments);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Error fetching shipments' });
+  }
+};
+
+//Get method to get shipment by ID
+exports.getShipById = async (req, res) => {
+  try{
+    //Fetch Shipment by Id from Database
+    const shipment = await shipment.find();
+
+    // If there are no shipments found, return 404 status code
+    if (!shipments || shipments.length === 0) {
+      return res.status(404).json({ message: "No shipments found" });
+    }
+
+    // If shipments are found, return them as JSON response
+    res.status(200).json(shipments);
+
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: 'Error fetching shipments' });

@@ -64,10 +64,19 @@ const shipmentSchema = new mongoose.Schema({
     required: true
   },
   status: {
-    type: String,
+    type: String
+  },
+  bookedAt:{
+    type:Date
   },
   shipmentId: {
-    type: String,
+    type: String
+  },
+  employeeId:{
+    type: String
+  },
+  trackingId:{
+    type: String
   }
         
 });
