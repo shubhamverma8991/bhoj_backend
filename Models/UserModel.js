@@ -32,6 +32,11 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: [true, "Your branch is required"],
   },
+  role:{
+    type:String,
+    enum:["Admin","User","SuperUser"],
+    default:"User"
+  },
   dateOfBirth: {
     type: Date,
     required: [true, "Your date of birth is required"],

@@ -39,19 +39,29 @@ const shipmentSchema = new mongoose.Schema({
   },
   parceltype: {
     type: String,
+    enum:["DOC","FLT","ELC"],
     required: true
   },
   quantity: {
     type: Number,
     required: true
   },
-  rate: {
-    type: Number,
-    required: true
-  },
-  finalamount: {
-    type: Number,
-    required: true
+  price: {
+    baseFair:{
+      type: Number,
+      required: true
+    },
+    sgst:{
+      type: Number,
+      required: true
+    },
+    cgst:{
+      type: Number,
+      required: true
+    },
+    fuelCost:{
+      type: Number
+    }
   },
   bookingdate: {
     type: Date,
@@ -67,16 +77,18 @@ const shipmentSchema = new mongoose.Schema({
   bookedAt:{
     type:Date
   },
-  shipmentId: {
+  employeeId:{
     type: String
   },
-  employeeId:{
+  invoiceId:{
+    type: String
+  },
+  shipmentId: {
     type: String
   },
   trackingId:{
     type: String
-  }
-        
+  }      
 });
 
 module.exports = mongoose.model("Shipment", shipmentSchema);
