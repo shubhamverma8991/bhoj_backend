@@ -7,8 +7,7 @@ const shipmentSchema = new mongoose.Schema({
       required: true
     },
     email: {
-      type: String,
-      required: true
+      type: String
     },
     phonenumber: {
       type: Number,
@@ -26,8 +25,7 @@ const shipmentSchema = new mongoose.Schema({
       required: true
     },
     email: {
-      type: String,
-      required: true
+      type: String
     },
     phonenumber: {
       type: Number,
