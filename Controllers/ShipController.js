@@ -22,13 +22,13 @@ exports.createShipment = async (req, res) => {
     const bookedAt = new Date();
 
     // EmployeeID of the person creating the booking
-    
+    const empId = employeeId;
 
     // Tracking ID to track the package (using a unique identifier, e.g., UUID)
     const trackingId = generateTrackingId();
 
     // Create a new shipment object with status, shipmentId, employeeId, and trackingId included
-    const newShipment = new Shipment({ ...req.body, status, bookedAt, shipmentId, employeeId, trackingId });
+    const newShipment = new Shipment({ ...req.body, status, bookedAt, shipmentId, empId, trackingId });
 
     // Save the new shipment to the database
     const savedShipment = await newShipment.save();
