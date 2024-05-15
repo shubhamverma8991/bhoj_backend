@@ -6,15 +6,15 @@ const quotaionSchema = new mongoose.Schema({
     required: true
    },
    withinCity:{
-    type: Number,
+    type: String,
     required: true
    },
    allCG:{
-    type: Number,
+    type: String,
     required: true
    },
    allIndia:{
-    type: Number,
+    type: String,
     required: true
    }
 });
