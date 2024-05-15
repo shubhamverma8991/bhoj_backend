@@ -49,7 +49,7 @@ const shipmentSchema = new mongoose.Schema({
     required: true
   },
   price: {
-    baseFair:{
+    baseFare:{
       type: Number,
       required: true
     },
