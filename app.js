@@ -31,7 +31,8 @@ app.use(
 app.use(cookieParser());
 app.use(express.json());
 app.use("/", authRoute);
-app.use("/",shipRoute);
+app.use("/", shipRoute);
+app.use("/", quoteRoute);
 
 app.get("/test", (req, res) => {
   res.status(200).send("GET request to the homepage successful");

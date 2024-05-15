@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 
-const quotaionSchema = new mongoose.Schema({
+const quotationSchema = new mongoose.Schema({
    weight: {
     type: String,
     required: true
@@ -19,4 +19,4 @@ const quotaionSchema = new mongoose.Schema({
    }
 });
 
-module.exports = mongoose.model("Quotation", quotaionSchema);
+module.exports = mongoose.model("Quotation", quotationSchema);
