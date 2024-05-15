@@ -24,7 +24,7 @@ module.exports.Signup = async (req, res, next) => {
     }
 
     // Generate employeeId based on branch
-    const branchInitials = branch.substring(0, 3).toUpperCase();
+    const branchInitials = branch.substring(0, 4).toUpperCase();
     const count = await User.countDocuments({ branch });
     const employeeId = `${branchInitials}-${count + 1}`;
 
