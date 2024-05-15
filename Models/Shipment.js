@@ -52,14 +52,18 @@ const shipmentSchema = new mongoose.Schema({
       required: true
     },
     sgst:{
-      type: Number,
-      required: true
+      type: Number
     },
     cgst:{
-      type: Number,
-      required: true
+      type: Number
+    },
+    igst:{
+      type: Number
     },
     fuelCost:{
+      type: Number
+    },
+    finalAmmount:{
       type: Number
     }
   },
