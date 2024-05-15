@@ -15,6 +15,7 @@ const shipmentSchema = new mongoose.Schema({
     },
     shipperAddress: {
       street: String,
+      pincode:Number,
       city: String,
       state: String
     }
@@ -33,6 +34,7 @@ const shipmentSchema = new mongoose.Schema({
     },
     receiverAddress: {
       street: String,
+      pincode:Number,
       city: String,
       state: String
     }
