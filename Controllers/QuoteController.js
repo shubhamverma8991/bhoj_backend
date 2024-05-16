@@ -45,7 +45,7 @@ exports.getAllQuotes = async (req, res) => {
 }
 
 // Function to calculate total prices based on weight
-exports.calculateAllPrices = async (req, res) => {
+exports.getPriceByWeight = async (req, res) => {
     try {
         // Extract weight from request body
         const { weight } = req.body;
