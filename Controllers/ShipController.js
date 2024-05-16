@@ -69,13 +69,13 @@ exports.getAllShipments = async (req, res) => {
   }
 };
 
-// GET method to get shipment by ID
-exports.getShipById = async (req, res) => {
+// GET method to get shipment by trackingId
+exports.getShipByTrackingId = async (req, res) => {
   try {
-    // Extract shipmentId from request parameters
-    const { trackingId } = req.params;
+    // Extract trackingId from request body
+    const { trackingId } = req.body;
 
-    // Fetch Shipment by shipmentId from Database
+    // Fetch Shipment by trackingId from Database
     const shipment = await Shipment.findOne({ trackingId });
 
     // If there is no shipment found, return 404 status code
