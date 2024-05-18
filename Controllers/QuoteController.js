@@ -48,7 +48,7 @@ exports.getAllQuotes = async (req, res) => {
 exports.getPriceByWeight = async (req, res) => {
     try {
         // Extract weight from request body
-        const { weight } = req.body;
+        const { weight } = req.query;
 
         // Fetch all quotations from the database
         const quotations = await Quotation.find();
