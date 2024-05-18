@@ -1,9 +1,9 @@
-const {createQuote, getAllQuotes, getQuoteByWeight} = require("../Controllers/QuoteController");
+const {createQuote, getAllQuotes, getPriceByWeight} = require("../Controllers/QuoteController");
 
 const router = require("express").Router();
 
 router.post("/createQuote", createQuote);
 router.get("/getAllQuotes", getAllQuotes);
-router.get("/getQuoteByWeight", getQuoteByWeight);
+router.get("/getPriceByWeight", getPriceByWeight);
 
 module.exports = router;
