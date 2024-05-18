@@ -73,7 +73,7 @@ exports.getAllShipments = async (req, res) => {
 exports.getShipByTrackingId = async (req, res) => {
   try {
     // Extract trackingId from request body
-    const { trackingId } = req.body;
+    const { trackingId } = req.query;
 
     // Fetch Shipment by trackingId from Database
     const shipment = await Shipment.findOne({ trackingId });
