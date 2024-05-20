@@ -9,11 +9,17 @@ exports.createShipment = async (req, res) => {
     const { shipper, receiver, parceltype, employeeId } = req.body;
 
     // Extract first 3 letters of the states from the shipper and receiver addresses
-    const fromStateInitials = shipper.shipperAddress.state.substring(0, 3).toUpperCase();
-    const toStateInitials = receiver.receiverAddress.state.substring(0, 3).toUpperCase();
+    const fromStateInitials = shipper.shipperAddress.state
+      .substring(0, 3)
+      .toUpperCase();
+    const toStateInitials = receiver.receiverAddress.state
+      .substring(0, 3)
+      .toUpperCase();
 
     // Generate shipmentId
-    const shipmentId = `${fromStateInitials}-${toStateInitials}-${parceltype.substring(0, 3).toUpperCase()}-${shipmentCounter}`;
+    const shipmentId = `${fromStateInitials}-${toStateInitials}-${parceltype
+      .substring(0, 3)
+      .toUpperCase()}-${shipmentCounter}`;
 
     // Update status
     const status = "Booked";
@@ -28,25 +34,31 @@ exports.createShipment = async (req, res) => {
     const trackingId = generateTrackingId();
 
     // Create a new shipment object with status, shipmentId, employeeId, and trackingId included
-    const newShipment = new Shipment({ ...req.body, status, bookedAt, shipmentId, empId, trackingId });
+    const newShipment = new Shipment({
+      ...req.body,
+      status,
+      bookedAt,
+      shipmentId,
+      empId,
+      trackingId,
+    });
 
     // Save the new shipment to the database
     const savedShipment = await newShipment.save();
-    
+
     // Increment the counter for next shipmentId
     shipmentCounter++;
 
     res.status(201).json(savedShipment);
   } catch (error) {
     console.error(error);
-    res.status(500).json({ message: 'Error creating shipment' });
+    res.status(500).json({ message: "Error creating shipment" });
   }
 };
 
 // Function to generate a unique tracking ID (e.g., using UUID)
 function generateTrackingId() {
-  
-  const uuid = require('uuid');
+  const uuid = require("uuid");
   return uuid.v4();
 }
 
@@ -65,7 +77,7 @@ exports.getAllShipments = async (req, res) => {
     res.status(200).json(shipments);
   } catch (error) {
     console.error(error);
-    res.status(500).json({ message: 'Error fetching shipments' });
+    res.status(500).json({ message: "Error fetching shipments" });
   }
 };
 
@@ -87,6 +99,6 @@ exports.getShipByTrackingId = async (req, res) => {
     res.status(200).json(shipment);
   } catch (error) {
     console.error(error);
-    res.status(500).json({ message: 'Error fetching shipment' });
+    res.status(500).json({ message: "Error fetching shipment" });
   }
 };
