@@ -8,6 +8,7 @@ const cookieParser = require("cookie-parser");
 const authRoute = require("./Routes/AuthRoute");
 const shipRoute = require("./Routes/ShipRoute");
 const quoteRoute = require("./Routes/QuoteRoute");
+const clientRoute = require("./Routes/ClientRoute");
 const { MONGO_URL } = process.env;
 
 const PORT = process.env.PORT || 3000;
@@ -34,6 +35,7 @@ app.use(express.json());
 app.use("/", authRoute);
 app.use("/", shipRoute);
 app.use("/", quoteRoute);
+app.use("/", clientRoute);
 
 app.get("/test", (req, res) => {
   res.status(200).send("GET request to the homepage successful");

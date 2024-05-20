@@ -26,7 +26,7 @@ exports.createQuote = async (req, res) => {
 }
 
 // GET method to get all quotations
-exports.getAllQuotes = async (req, res) => {
+exports.getAllQuotes = async (res) => {
     try {
         // Fetch all quotations from the database
         const quotations = await Quotation.find();
