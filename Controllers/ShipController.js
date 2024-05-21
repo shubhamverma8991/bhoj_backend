@@ -3,6 +3,7 @@ const Shipment = require("../Models/Shipment");
 // Variable to keep track of the counter for shipmentId
 let shipmentCounter = 1;
 
+
 // POST method to Create new shipment (./createShip)
 exports.createShipment = async (req, res) => {
   try {
@@ -31,7 +32,7 @@ exports.createShipment = async (req, res) => {
     const empId = employeeId;
 
     // Tracking ID to track the package (using a unique identifier, e.g., UUID)
-    const trackingId = generateTrackingId();
+    const trackingId = generateTrackingId(shipper.name, parceltype, shipmentId);
 
     // Create a new shipment object with status, shipmentId, employeeId, and trackingId included
     const newShipment = new Shipment({
@@ -56,14 +57,29 @@ exports.createShipment = async (req, res) => {
   }
 };
 
-// Function to generate a unique tracking ID (e.g., using UUID)
-function generateTrackingId() {
-  const uuid = require("uuid");
-  return uuid.v4();
+// Function to generate a unique tracking ID
+function generateTrackingId(shipperDetails, parceltype, shipmentId) {
+  // Get the current date and time
+  const now = new Date();
+  
+  // Format the timestamp as YYYYMMDDHHMMSS
+  const timestamp = now.toISOString().replace(/[-T:.Z]/g, '');
+  
+  // Create the base tracking ID using shipper details, parcel type, and shipment ID
+  const baseTrackingId = `${shipperDetails}-${parceltype}-${shipmentId}-${timestamp}`;
+  
+  // Generate a salt
+  const salt = bcrypt.genSalt(10);
+  
+  // Hash the base tracking ID with bcrypt
+  const hash = bcrypt.hash(baseTrackingId, salt);
+  
+  // Return the first 20 characters of the hash as the tracking ID
+  return hash.replace(/[^A-Z0-9]/g, '').substring(0, 16);
 }
 
 // GET method to get all shipments (./getShipments)
-exports.getAllShipments = async (req, res) => {
+exports.getAllShipments = async (res) => {
   try {
     // Fetch all shipments from the database
     const shipments = await Shipment.find();
