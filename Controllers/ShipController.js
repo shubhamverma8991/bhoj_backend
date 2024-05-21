@@ -1,8 +1,8 @@
 const Shipment = require("../Models/Shipment");
+const bcrypt = require('bcrypt');
 
 // Variable to keep track of the counter for shipmentId
 let shipmentCounter = 1;
-
 
 // POST method to Create new shipment (./createShip)
 exports.createShipment = async (req, res) => {
@@ -10,17 +10,11 @@ exports.createShipment = async (req, res) => {
     const { shipper, receiver, parceltype, employeeId } = req.body;
 
     // Extract first 3 letters of the states from the shipper and receiver addresses
-    const fromStateInitials = shipper.shipperAddress.state
-      .substring(0, 3)
-      .toUpperCase();
-    const toStateInitials = receiver.receiverAddress.state
-      .substring(0, 3)
-      .toUpperCase();
+    const fromStateInitials = shipper.shipperAddress.state.substring(0, 3).toUpperCase();
+    const toStateInitials = receiver.receiverAddress.state.substring(0, 3).toUpperCase();
 
     // Generate shipmentId
-    const shipmentId = `${fromStateInitials}-${toStateInitials}-${parceltype
-      .substring(0, 3)
-      .toUpperCase()}-${shipmentCounter}`;
+    const shipmentId = `${fromStateInitials}-${toStateInitials}-${parceltype.substring(0, 3).toUpperCase()}-${shipmentCounter}`;
 
     // Update status
     const status = "Booked";
@@ -31,34 +25,27 @@ exports.createShipment = async (req, res) => {
     // EmployeeID of the person creating the booking
     const empId = employeeId;
 
-    // Tracking ID to track the package (using a unique identifier, e.g., UUID)
-    const trackingId = generateTrackingId(shipper.name, parceltype, shipmentId);
+    // Generate Tracking ID to track the package
+    const trackingId = await generateTrackingId(shipper.name, parceltype, shipmentId);
 
     // Create a new shipment object with status, shipmentId, employeeId, and trackingId included
-    const newShipment = new Shipment({
-      ...req.body,
-      status,
-      bookedAt,
-      shipmentId,
-      empId,
-      trackingId,
-    });
+    const newShipment = new Shipment({ ...req.body, status, bookedAt, shipmentId, empId, trackingId });
 
     // Save the new shipment to the database
     const savedShipment = await newShipment.save();
-
+    
     // Increment the counter for next shipmentId
     shipmentCounter++;
 
     res.status(201).json(savedShipment);
   } catch (error) {
     console.error(error);
-    res.status(500).json({ message: "Error creating shipment" });
+    res.status(500).json({ message: 'Error creating shipment' });
   }
 };
 
 // Function to generate a unique tracking ID
-function generateTrackingId(shipperDetails, parceltype, shipmentId) {
+async function generateTrackingId(shipperDetails, parcelType, shipmentId) {
   // Get the current date and time
   const now = new Date();
   
@@ -66,15 +53,15 @@ function generateTrackingId(shipperDetails, parceltype, shipmentId) {
   const timestamp = now.toISOString().replace(/[-T:.Z]/g, '');
   
   // Create the base tracking ID using shipper details, parcel type, and shipment ID
-  const baseTrackingId = `${shipperDetails}-${parceltype}-${shipmentId}-${timestamp}`;
+  const baseTrackingId = `${shipperDetails}-${parcelType}-${shipmentId}-${timestamp}`;
   
   // Generate a salt
-  const salt = bcrypt.genSalt(10);
+  const salt = await bcrypt.genSalt(10);
   
   // Hash the base tracking ID with bcrypt
-  const hash = bcrypt.hash(baseTrackingId, salt);
+  const hash = await bcrypt.hash(baseTrackingId, salt);
   
-  // Return the first 20 characters of the hash as the tracking ID
+  // Return the first 16 characters of the hash as the tracking ID
   return hash.replace(/[^A-Z0-9]/g, '').substring(0, 16);
 }
 
@@ -118,3 +105,4 @@ exports.getShipByTrackingId = async (req, res) => {
     res.status(500).json({ message: "Error fetching shipment" });
   }
 };
+
