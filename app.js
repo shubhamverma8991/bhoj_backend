@@ -30,6 +30,13 @@ app.use(
     credentials: true,
   })
 );
+const sslServer = https.createServer(
+  {
+  key:'',
+  cert:''
+  }
+, app)
+sslServer.listen(3443, () => console.log('Secure server on port 3443'))
 app.use(cookieParser());
 app.use(express.json());
 app.use("/", authRoute);
