@@ -37,7 +37,7 @@ exports.createClient = async (req, res) => {
 };
 
 //GET Method to get all Clients data
-exports.getAllClients = async (res) => {
+exports.getAllClients = async (req, res) => {
   try {
     // Fetch all Clients from the database
     const clients = await Client.find();
@@ -59,7 +59,7 @@ exports.getAllClients = async (res) => {
 exports.getClientByClientId = async (req, res) => {
   try {
     // Extract clientId from request body
-    const { clientId } = req.query;
+    const { clientId } = req.params;
 
     // Find the Client by clientId
     const client = await Client.findOne({ clientId });
@@ -77,38 +77,21 @@ exports.getClientByClientId = async (req, res) => {
   }
 };
 
+//PUT Method to update Client by clientId
 exports.updateClientByClientId = async (req, res) => {
   try {
-    // Extract clientId and other updated Client details from request body
+    // Extract clientId from request body
+    const { clientId } = req.params;
+
+    // Extract updated Client details from request body
     const {
       clientName,
-      clientId,
       GSTIN,
       invoiceId,
       location,
       BaseFare,
       MobileNo,
     } = req.body;
-
-    // Validate that clientId is provided
-    if (!clientId) {
-      console.log('Client ID is missing in the request body');
-      return res.status(400).json({ message: "Client ID is required" });
-    }
-
-    // Validate that all necessary fields are provided
-    const missingFields = [];
-    if (!clientName) missingFields.push('clientName');
-    if (!GSTIN) missingFields.push('GSTIN');
-    if (!invoiceId) missingFields.push('invoiceId');
-    if (!location) missingFields.push('location');
-    if (!BaseFare) missingFields.push('BaseFare');
-    if (!MobileNo) missingFields.push('MobileNo');
-
-    if (missingFields.length > 0) {
-      console.log('Missing required fields:', missingFields);
-      return res.status(400).json({ message: "Missing required fields: " + missingFields.join(', ') });
-    }
 
     // Find the Client by clientId and update it
     const updatedClient = await Client.findOneAndUpdate(
@@ -121,36 +104,27 @@ exports.updateClientByClientId = async (req, res) => {
         BaseFare,
         MobileNo,
       },
-      { new: true, runValidators: true }
+      { new: true }
     );
 
     // If Client is not found, return 404 status code
     if (!updatedClient) {
-      console.log('Client not found for clientId:', clientId);
       return res.status(404).json({ message: "Client not found" });
     }
 
     // Return the updated Client as JSON response
     res.status(200).json(updatedClient);
   } catch (error) {
-    console.error('Error updating Client:', error); // Log error
-    res.status(500).json({ message: "Error updating Client", error: error.message });
-  }
+    console.error(error);
+    res.status(500).json({ message: "Error updating Client" });
+  }
 };
 
-// DELETE Method to delete Client by clientId
+//DELETE Method to delete Client by clientId
 exports.deleteClientByClientId = async (req, res) => {
   try {
-    // Extract clientId from request query
-    const { clientId } = req.query;
-
-    // Log clientId to debug
-    console.log("clientId:", clientId);
-
-    // Verify that clientId is present in the query
-    if (!clientId) {
-      return res.status(400).json({ message: "ClientId is required" });
-    }
+    // Extract clientId from request body
+    const { clientId } = req.params;
 
     // Find the Client by clientId and delete it
     const deletedClient = await Client.findOneAndDelete({ clientId });
@@ -160,8 +134,8 @@ exports.deleteClientByClientId = async (req, res) => {
       return res.status(404).json({ message: "Client not found" });
     }
 
-    // Return the deleted Client and success message as JSON response
-    res.status(200).json({ deletedClient, message: "Client deleted successfully" });
+    // Return the deleted Client as JSON response
+    res.status(200).json(deletedClient);
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Error deleting Client" });
